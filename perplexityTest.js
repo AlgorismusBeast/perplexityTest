@@ -79,10 +79,13 @@ async function perplexityTest() {
 }
 
 // Usage example:
-perplexityTest()
-  .then(({ headers, cookies }) => {
-    console.log('Headers and cookies:', headers, cookies);
-  })
-  .catch((error) => {
-    console.error('An unexpected error occurred:', error);
-  });
+// perplexityTest()
+//   .then(({ headers, cookies }) => {
+//     console.log('Headers and cookies:', headers, cookies);
+//   })
+//   .catch((error) => {
+//     console.error('An unexpected error occurred:', error);
+//   });
+
+module.exports.perplexityTest = perplexityTest;
+
