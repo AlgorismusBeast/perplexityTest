@@ -51,12 +51,8 @@ async function perplexityTest() {
     // await page.click(".ml-md > button"), { delay: 10000 };
 
     // NEW BUTTON ATTEMPT
-    await page.waitForSelector(".ml-md button[type='button']", { timeout: 10000 });
-    await page.click(".ml-md button[type='button']", { delay: 10000 });
-
-    await page.waitForSelector(".max-w-sm input"), { delay: 10000 };
-    await page.click(".max-w-sm input"), { delay: 10000 };
-    await page.type(".max-w-sm input", 'a@a.com', { delay: 10000 });
+    await page.waitForSelector(".ml-md.mt-md button[type='button']", { timeout: 10000 });
+    await page.click(".ml-md.mt-md button[type='button']", { delay: 10000 });
 
     await page.setRequestInterception(true);
     page.on('request', async request => {
