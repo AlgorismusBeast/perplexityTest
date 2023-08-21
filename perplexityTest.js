@@ -7,11 +7,7 @@ async function getPPHeaders() {
   try {
     browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
-
-    // Set viewport
     await page.setViewport({ width: 1280, height: 800 });
-
-    // Set user agent
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36');
 
     let PPheaders;
@@ -24,10 +20,9 @@ async function getPPHeaders() {
     await page.goto('https://www.perplexity.ai/', { waitUntil: 'load', timeout: 0 });
     const PPcookies = await page.cookies();
     await page.screenshot({ path: "image.png" });
-
     await browser.close();
-    return { headers: PPheaders, cookies: PPcookies };
 
+    return { headers: PPheaders, cookies: PPcookies };
   } catch (error) {
     console.error('An error occurred in getPPHeaders:', error);
     if (browser) {
@@ -42,13 +37,8 @@ async function perplexityTest() {
     let { headers, cookies } = await getPPHeaders();
     const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
-
-    // Set viewport
     await page.setViewport({ width: 1280, height: 800 });
-
-    // Set user agent
     await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36');
-
     await page.setExtraHTTPHeaders(headers);
     for (const cookie of cookies) {
       await page.setCookie(cookie);
@@ -61,20 +51,28 @@ async function perplexityTest() {
     await page.waitForSelector(".max-w-sm input"), { delay: 100 };
     await page.click(".max-w-sm input"), { delay: 100 };
     await page.type(".max-w-sm input", 'a@a.com', { delay: 100 });
+
+    let PPheaders;
+    let PPcookies;
+    await page.setRequestInterception(true);
+    page.on('request', async request => {
+      let url = request.url()
+      if (url.includes('/api/auth/signin/email')) {
+        PPheaders = request.headers()
+        PPcookies = await page.cookies()
+      }
+      request.continue();
+    });
+
     await page.screenshot({ path: "image2.png" });
     await page.click('div.border-t.mt-md button'), { delay: 100 };
-    ({ headers, cookies } = await getPPHeaders());
-    await page.setExtraHTTPHeaders(headers);
-    for (const cookie of cookies) {
-      await page.setCookie(cookie);
-    }
+
+
     await new Promise(resolve => setTimeout(resolve, 3000));
-
-    // Take a screenshot
     await page.screenshot({ path: "image3.png" });
-
     await browser.close();
 
+    return { headers: PPheaders, cookies: PPcookies }; // Return the headers and cookies
   } catch (error) {
     console.error('An error occurred in perplexityTest:', error);
   }
@@ -82,6 +80,9 @@ async function perplexityTest() {
 
 // Usage example:
 perplexityTest()
+  .then(({ headers, cookies }) => {
+    console.log('Headers and cookies:', headers, cookies);
+  })
   .catch((error) => {
     console.error('An unexpected error occurred:', error);
   });
