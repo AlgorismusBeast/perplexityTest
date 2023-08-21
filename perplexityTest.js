@@ -71,6 +71,7 @@ async function perplexityTest() {
     await page.screenshot({ path: "image3.png" });
     await browser.close();
 
+    console.log({ headers: PPheaders, cookies: PPcookies });
     return { headers: PPheaders, cookies: PPcookies }; // Return the headers and cookies
   } catch (error) {
     console.error('An error occurred in perplexityTest:', error);
