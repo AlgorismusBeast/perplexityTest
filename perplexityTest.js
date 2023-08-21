@@ -44,11 +44,11 @@ async function perplexityTest() {
       await page.setCookie(cookie);
     }
 
+    let PPheaders = headers;
+    let PPcookies = cookies;
+
     // Navigate through the page
     await page.goto('https://www.perplexity.ai/', { waitUntil: 'load' });
-
-    // await page.waitForSelector(".ml-md > button"), { delay: 10000 };
-    // await page.click(".ml-md > button"), { delay: 10000 };
 
     // NEW BUTTON ATTEMPT
     await page.waitForSelector(".ml-md.mt-md button[type='button']", { timeout: 10000 });
@@ -56,17 +56,16 @@ async function perplexityTest() {
 
     await page.setRequestInterception(true);
     page.on('request', async request => {
-      let url = request.url()
+      let url = request.url();
       if (url.includes('/api/auth/signin/email')) {
-        PPheaders = request.headers()
-        PPcookies = await page.cookies()
+        PPheaders = request.headers();
+        PPcookies = await page.cookies();
       }
       request.continue();
     });
 
     await page.screenshot({ path: "image2.png" });
-    await page.click('div.border-t.mt-md button'), { delay: 10000 };
-
+    await page.click('div.border-t.mt-md button', { delay: 10000 });
 
     await new Promise(resolve => setTimeout(resolve, 10000));
     await page.screenshot({ path: "image3.png" });
@@ -78,14 +77,4 @@ async function perplexityTest() {
   }
 }
 
-// Usage example:
-// perplexityTest()
-//   .then(({ headers, cookies }) => {
-//     console.log('Headers and cookies:', headers, cookies);
-//   })
-//   .catch((error) => {
-//     console.error('An unexpected error occurred:', error);
-//   });
-
 module.exports.perplexityTest = perplexityTest;
-
