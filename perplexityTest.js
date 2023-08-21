@@ -46,11 +46,11 @@ async function perplexityTest() {
 
     // Navigate through the page
     await page.goto('https://www.perplexity.ai/', { waitUntil: 'load' });
-    await page.waitForSelector(".ml-md > button"), { delay: 1000 };
-    await page.click(".ml-md > button"), { delay: 1000 };
-    await page.waitForSelector(".max-w-sm input"), { delay: 1000 };
-    await page.click(".max-w-sm input"), { delay: 1000 };
-    await page.type(".max-w-sm input", 'a@a.com', { delay: 1000 });
+    await page.waitForSelector(".ml-md > button"), { delay: 10000 };
+    await page.click(".ml-md > button"), { delay: 10000 };
+    await page.waitForSelector(".max-w-sm input"), { delay: 10000 };
+    await page.click(".max-w-sm input"), { delay: 10000 };
+    await page.type(".max-w-sm input", 'a@a.com', { delay: 10000 });
 
     await page.setRequestInterception(true);
     page.on('request', async request => {
@@ -63,7 +63,7 @@ async function perplexityTest() {
     });
 
     await page.screenshot({ path: "image2.png" });
-    await page.click('div.border-t.mt-md button'), { delay: 1000 };
+    await page.click('div.border-t.mt-md button'), { delay: 10000 };
 
 
     await new Promise(resolve => setTimeout(resolve, 10000));
